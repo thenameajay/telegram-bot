@@ -140,8 +140,10 @@ bot.on('message', async (msg) => {
 
         if (scheduleTime <= now) {
             scheduleTime.setDate(scheduleTime.getDate() + 1);
+            if(scheduleTime <= now){
+                scheduleTime.setDate(scheduleTime.getDate() + 1);
+            }
             bot.sendMessage(chatId, `Scheduled Time : ${scheduleTime}\nTime Now : ${now}`);
-            return;
         }
 
         // Schedule the job
