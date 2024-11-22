@@ -74,6 +74,10 @@ bot.on('message', async (msg) => {
             if(chatId?.toString().startsWith("-")){
                 return
             }
+            else if(text === '/start'){
+                bot.sendMessage(chatId, `Hello there, use /help to see all commands !`)
+                return
+            }
             bot.sendMessage(chatId, 'Sorry, only the bot owner can use this command.');
             return;
         }
@@ -122,7 +126,8 @@ bot.on('message', async (msg) => {
         const [hours, minutes] = time.split(':').map(Number);
 
         // Schedule the message
-        const now = new Date();
+        const localNow = new Date();
+        const now = new Date(localNow.toISOString());
         const userLocalScheduledTime = new Date(
             now.getFullYear(),
             now.getMonth(),
