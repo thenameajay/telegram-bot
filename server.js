@@ -139,7 +139,8 @@ bot.on('message', async (msg) => {
         const scheduleTime = zonedTimeToUtc(userLocalScheduledTime, 'Asia/Kolkata');
 
         if (scheduleTime <= now) {
-            bot.sendMessage(chatId, `Time must be in the future.\nScheduled Time : ${scheduleTime}\nTime Now : ${now}`);
+            scheduleTime.setDate(userLocalScheduledTime.getDate() + 1);
+            bot.sendMessage(chatId, `Scheduled Time : ${scheduleTime}\nTime Now : ${now}`);
             return;
         }
 
