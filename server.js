@@ -2,6 +2,9 @@ const express = require("express")
 require('dotenv').config()
 const PORT = 8765
 const app = express()
+const cron = require('node-cron') // SCHEDULER
+const fetch= require('node-fetch')
+// import fetch from "node-fetch"
 app.use(express.json())
 
 app.get("*", (req, res) => {
@@ -34,11 +37,11 @@ bot.on('my_chat_member', (msg) => {
   
     if (newStatus === 'member') {
       // Bot was added to a group
-      console.log(`Bot added to a group: ${chat.title} (${chat.id})`);
+    //   console.log(`Bot added to a group: ${chat.title} (${chat.id})`);
   
       // Notify the admin or user
       if(BOT_OWNER_ID!=''){
-        console.log(BOT_OWNER_ID)
+        // console.log(BOT_OWNER_ID)
         bot.sendMessage(
             BOT_OWNER_ID,
             `The bot was added to a new group:\n\nGroup Name: ${chat.title}\nGroup ID: ${chat.id}`
@@ -76,13 +79,13 @@ bot.on('message', async (msg) => {
 
     if(chatId.toString().startsWith("-")){
         GROUP_CHAT_ID=msg.chat.id
-        console.log(chatId)
+        // console.log(chatId)
     }
 
 
 
-    console.log(`chat id : ${chatId}`)
-    console.log(`message text : ${text}`)
+    // console.log(`chat id : ${chatId}`)
+    // console.log(`message text : ${text}`)
     // console.log(`group name : ${msg.chat.title}`)
 
     if(text === '/start'){
@@ -90,13 +93,13 @@ bot.on('message', async (msg) => {
     }
     else if (text?.startsWith('/schedule')) {
 
-        bot.getChat(GROUP_CHAT_ID)
-            .then((chat) => {
-                console.log(`Group Name: ${chat.title}`);
-            })
-            .catch((error) => {
-                console.error('Error fetching chat info:', error.message);
-            });
+        // bot.getChat(GROUP_CHAT_ID)
+        //     .then((chat) => {
+        //         console.log(`Group Name: ${chat.title}`);
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error fetching chat info:', error.message);
+        //     });
 
         const parts = text.split(' ');
 
@@ -148,7 +151,7 @@ bot.on('message', async (msg) => {
         // console.log("cancell all called")
 
         Object.keys(messageSchedule).forEach((jobId) => {
-            console.log(jobId)
+            // console.log(jobId)
             messageSchedule[jobId].cancel();
             delete messageSchedule[jobId];
         })
@@ -173,7 +176,7 @@ bot.on('message', async (msg) => {
         }
     }
     else if (text === '/greetme') {
-        console.log("we reached here")
+        // console.log("we reached here")
         bot.sendMessage(chatId, "hi i am aj bot created by one and only ajay !")
     }
     else if(text==='/help'){
@@ -182,12 +185,22 @@ bot.on('message', async (msg) => {
     else if(text?.startsWith("/groupid")){
         const parts = text.split(' ')
         process.env.GROUP_CHAT_ID=parts[1]
-        console.log(process.env.GROUP_CHAT_ID)
+        // console.log(process.env.GROUP_CHAT_ID)
     }
     else if(text?.startsWith("/")){
         bot.sendMessage(chatId, `It is not valid a command.\nUse /help command to see all valid commands.`)
     }
 });
+
+// MAKING SCHEDULED TASK TO PROTECT SERVER FROM SLEEPING--------------------------
+
+cron.schedule('*/14 * * * *', ()=>{
+    fetch(process.env.SERVER_AWAKE_URL, {method: 'POST'}).then((r1)=>{
+      console.log("server awake")
+    })
+  })
+  
+// ------------------------------------------------------------------
 
 
 app.listen(PORT, () => {
