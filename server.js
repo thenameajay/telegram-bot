@@ -4,6 +4,7 @@ const PORT = 8765
 const app = express()
 const cron = require('node-cron') // SCHEDULER
 const fetch= require('node-fetch')
+const { zonedTimeToUtc } = require('date-fns-tz');
 // import fetch from "node-fetch"
 app.use(express.json())
 
@@ -122,13 +123,15 @@ bot.on('message', async (msg) => {
 
         // Schedule the message
         const now = new Date();
-        const scheduleTime = new Date(
+        const userLocalScheduledTime = new Date(
             now.getFullYear(),
             now.getMonth(),
             now.getDate(),
             hours,
             minutes
         );
+
+        const scheduleTime = zonedTimeToUtc(userLocalScheduledTime, 'Asia/Kolkata');
 
         if (scheduleTime <= now) {
             bot.sendMessage(chatId, 'Time must be in the future.');
