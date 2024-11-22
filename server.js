@@ -109,7 +109,7 @@ bot.on('message', async (msg) => {
         const parts = text.split(' ');
 
         if (parts.length < 3) {
-            bot.sendMessage(chatId, 'Usage: /schedule <time> <message>\nExample: /schedule 14:30 Hello Group!');
+            bot.sendMessage(chatId, 'Usage: /schedule <time> <message>\nExample: /schedule 14:06 Hello Group!');
             return;
         }
 
@@ -143,7 +143,7 @@ bot.on('message', async (msg) => {
             if(scheduleTime < now){
                 scheduleTime.setDate(scheduleTime.getDate() + 1);
             }
-            bot.sendMessage(chatId, `Scheduled Time : ${scheduleTime}\nTime Now : ${now}`);
+            // bot.sendMessage(chatId, `Scheduled Time : ${scheduleTime}\nTime Now : ${now}`);
         }
 
         // Schedule the job
